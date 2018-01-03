@@ -1,5 +1,5 @@
 package org.mead.flyweight;
 
 public interface ICustomFactory {
-	Object create();
+	Object create(final Object... args);
 }

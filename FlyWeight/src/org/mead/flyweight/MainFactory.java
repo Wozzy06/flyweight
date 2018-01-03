@@ -14,16 +14,40 @@ public final class MainFactory<E extends Enum<E>> implements IMainFactory<E> {
 	}
 
 	@Override
-	public final Object create(final E type) {
-		Object object = store.get(type);
+	public final Object create(final E key, final Object... args) {
+		Object object = getObject(key);
 		if (null != object) return object;
-		object = customFactories.get(type).create();
-		store.put(type, object);
+		object = createObject(key, args);
+		setObjectToStore(key, object);
 		return object;
+	}
+
+	public final Object createObject(final E key, final Object... args) {
+		return getCustomFactory(key).create(args);
 	}
 
 	public final Map<E, ICustomFactory> getCustomFactories() {
 		return customFactories;
+	}
+
+	public final ICustomFactory getCustomFactory(final E key) {
+		return customFactories.get(key);
+	}
+
+	public final Object getObject(final E key) {
+		return store.get(key);
+	}
+
+	public final void removeObjectFromStore(final E key) {
+		store.remove(key);
+	}
+
+	public final ICustomFactory setCustomFactory(final E key, final ICustomFactory customFactory) {
+		return customFactories.put(key, customFactory);
+	}
+
+	public final void setObjectToStore(final E key, final Object object) {
+		store.put(key, object);
 	}
 
 }
